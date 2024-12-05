@@ -1,4 +1,4 @@
 [workspace]
-members = ["template", "day-01", "day-02", "day-03", "day-04"]
+members = ["template", "day-01", "day-02", "day-03", "day-04", "day-05"]
 resolver = "2"
-default-members = ["day-04"]
+default-members = ["day-05"]
