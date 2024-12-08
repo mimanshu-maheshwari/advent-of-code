@@ -11,4 +11,4 @@ members = [
   "day-08",
 ]
 resolver = "2"
-default-members = ["day-07"]
+default-members = ["day-08"]
