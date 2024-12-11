@@ -10,20 +10,20 @@ pub fn solve(input: String) -> Result<String> {
         .collect::<Vec<_>>();
     let mut result = 0;
     for stone in input {
-        result += dfs(&mut dp, (stone, 75)).len();
+        result += dfs(&mut dp, (stone, 75));
     }
     Ok(result.to_string())
 }
 
-fn dfs(dp: &mut HashMap<(usize, usize), Vec<usize>>, (stone, blink): (usize, usize)) -> Box<[usize]> {
-    if let Some(stones) = dp.get(&(stone, blink)) {
-        return stones.clone().into_boxed_slice();
+fn dfs(dp: &mut HashMap<(usize, usize), usize>, (stone, blink): (usize, usize)) -> usize {
+    if let Some(&stones) = dp.get(&(stone, blink)) {
+        return stones;
     }
 
     let ret = 
     // we completed the number of blinks
     if blink == 0 {
-        vec![stone].into_boxed_slice()
+        1
     }
     // stone is 0
     else if stone == 0 {
@@ -40,14 +40,13 @@ fn dfs(dp: &mut HashMap<(usize, usize), Vec<usize>>, (stone, blink): (usize, usi
         let pow = 10_usize.pow(len / 2);
         let left = dfs(dp, ((stone / pow), blink - 1));
         let right = dfs(dp, ((stone % pow), blink - 1));
-        let ans= [left.to_vec(), right.to_vec()].concat();
-        ans.into_boxed_slice()
+        left + right
     }
     // lenght is odd
     else {
         dfs(dp, (stone * 2024, blink - 1))
     };
-    dp.insert((stone, blink), ret.to_vec());
+    dp.insert((stone, blink), ret);
     ret
 }
 
