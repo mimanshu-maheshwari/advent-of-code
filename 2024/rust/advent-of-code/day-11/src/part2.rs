@@ -1,40 +1,61 @@
+use std::collections::HashMap;
+
 use super::Result;
+
 pub fn solve(input: String) -> Result<String> {
-    let mut stones = input
+    let mut dp = HashMap::new();
+    let input = input
         .split_whitespace()
         .flat_map(|val| val.parse::<usize>())
         .collect::<Vec<_>>();
-    for _ in 0..75 {
-        let mut next_stones = Vec::new();
-        for stone in stones {
-            if stone == 0 {
-                next_stones.push(1);
-                continue;
-            }
-            let mut len = 0;
-            let mut num = stone;
-            while num > 0 {
-                len += 1;
-                num /= 10;
-            }
-            if (len & 1) == 0 {
-                let pow = 10_usize.pow(len / 2);
-                next_stones.push(stone / pow);
-                next_stones.push(stone % pow);
-            } else {
-                next_stones.push(stone * 2024);
-            }
-        }
-        stones = next_stones;
+    let mut result = 0;
+    for stone in input {
+        result += dfs(&mut dp, (stone, 75)).len();
+    }
+    Ok(result.to_string())
+}
+
+fn dfs(dp: &mut HashMap<(usize, usize), Vec<usize>>, (stone, blink): (usize, usize)) -> Box<[usize]> {
+    if let Some(stones) = dp.get(&(stone, blink)) {
+        return stones.clone().into_boxed_slice();
     }
 
-    Ok(stones.len().to_string())
+    let ret = 
+    // we completed the number of blinks
+    if blink == 0 {
+        vec![stone].into_boxed_slice()
+    }
+    // stone is 0
+    else if stone == 0 {
+        dfs(dp, (1, blink - 1))
+    }
+    // is even length
+    else if (stone.to_string().len() & 1) == 0 {
+        let mut len = 0;
+        let mut num = stone;
+        while num > 0 {
+            len += 1;
+            num /= 10;
+        }
+        let pow = 10_usize.pow(len / 2);
+        let left = dfs(dp, ((stone / pow), blink - 1));
+        let right = dfs(dp, ((stone % pow), blink - 1));
+        let ans= [left.to_vec(), right.to_vec()].concat();
+        ans.into_boxed_slice()
+    }
+    // lenght is odd
+    else {
+        dfs(dp, (stone * 2024, blink - 1))
+    };
+    dp.insert((stone, blink), ret.to_vec());
+    ret
 }
 
 #[cfg(test)]
 mod tests {
     use super::solve;
     #[test]
+    #[ignore = "is only valid for 25 iters"]
     fn example_1() {
         let input = "125 17";
         // 253000 1 7
