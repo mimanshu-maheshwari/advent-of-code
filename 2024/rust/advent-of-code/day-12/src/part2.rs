@@ -1,5 +1,5 @@
 use std::{
-    collections::{HashMap, HashSet, VecDeque},
+    collections::{HashSet, VecDeque},
     hash::Hash,
     ops::{Add, Deref, Div, Sub},
 };
@@ -100,7 +100,7 @@ fn load_data(input: &str) -> Vec<Vec<u8>> {
         .collect()
 }
 
-fn diagonals(n: usize, (row, col): (usize, usize)) -> impl Iterator<Item = (usize, usize)> {
+fn _diagonals(n: usize, (row, col): (usize, usize)) -> impl Iterator<Item = (usize, usize)> {
     let mut nbrs = Vec::with_capacity(4);
     // up left
     if row > 0 && col > 0 {
@@ -185,6 +185,7 @@ fn calc_sides(region: &HashSet<(usize, usize)>) -> usize {
         .iter()
         .map(|&(r, c)| (F64(r as f64), F64(c as f64)))
         .collect::<HashSet<_>>();
+    // collecting corners
     for &(r, c) in &region {
         for (cr, cc) in [
             (r - 0.5, c - 0.5),
