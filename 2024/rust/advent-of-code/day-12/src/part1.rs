@@ -6,19 +6,18 @@ use super::Result;
 // multiply area with perimeter
 // will take each region as separate
 pub fn solve(input: String) -> Result<String> {
-    let matrix = load_data(&input);
+    let mut matrix = load_data(&input);
     let n = matrix.len();
     if n == 0 || matrix[0].len() != n {
         return Err("Invalid input. Check the size of Map.".into());
     }
-    let mut visited = HashSet::new();
     let mut count = 0;
     for row in 0..n {
         for col in 0..n {
-            if visited.contains(&(row, col)) {
+            if matrix[row][col] == b'.' {
                 continue;
             }
-            count += bfs(&matrix, &mut visited, n, (row, col));
+            count += bfs(&mut matrix, n, (row, col));
         }
     }
     Ok(count.to_string())
@@ -52,22 +51,18 @@ fn neighbor(n: usize, (row, col): (usize, usize)) -> impl Iterator<Item = (usize
     nbrs.into_iter()
 }
 
-fn bfs(
-    matrix: &[Vec<u8>],
-    visited: &mut HashSet<(usize, usize)>,
-    n: usize,
-    (row, col): (usize, usize),
-) -> usize {
+fn bfs(matrix: &mut [Vec<u8>], n: usize, (row, col): (usize, usize)) -> usize {
     let mut cells = HashSet::new();
     let mut queue = VecDeque::new();
     let mut perimeter = 0;
     queue.push_back((row, col));
     let value = matrix[row][col];
+    println!("{}", value as char);
     while !queue.is_empty() {
         let len = queue.len();
         for _ in 0..len {
             if let Some((r, c)) = queue.pop_front() {
-                visited.insert((r, c));
+                matrix[r][c] = b'.';
                 let inserted = cells.insert((r, c));
                 if inserted {
                     perimeter += 4;
@@ -76,7 +71,7 @@ fn bfs(
                     if inserted && cells.contains(&(r_next, c_next)) {
                         perimeter -= 2;
                     }
-                    if visited.contains(&(r_next, c_next)) || value != matrix[r_next][c_next] {
+                    if matrix[r_next][c_next] == b'.' || value != matrix[r_next][c_next] {
                         continue;
                     }
                     queue.push_back((r_next, c_next));
@@ -85,10 +80,7 @@ fn bfs(
         }
     }
     let area = cells.len();
-    println!(
-        "{value}\n\tarea: {area}\n\tperimeter: {perimeter}",
-        value = value as char
-    );
+    println!("\n\tarea: {area}\n\tperimeter: {perimeter}");
     area * perimeter
 }
 
