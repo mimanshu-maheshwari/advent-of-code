@@ -1,6 +1,6 @@
 use core::panic;
 
-use template::{part1::solve as solve1, part2::solve as solve2, solver::solve, Result};
+use day::{part1::solve as solve1, part2::solve as solve2, solver::solve, Result};
 
 const PART1_INPUT: &str = "res/part1-input.txt";
 const PART2_INPUT: &str = "res/part2-input.txt";
