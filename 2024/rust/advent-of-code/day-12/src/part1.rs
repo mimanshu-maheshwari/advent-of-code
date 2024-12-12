@@ -57,11 +57,14 @@ fn bfs(matrix: &mut [Vec<u8>], n: usize, (row, col): (usize, usize)) -> usize {
     let mut perimeter = 0;
     queue.push_back((row, col));
     let value = matrix[row][col];
-    println!("{}", value as char);
+    // println!("{}", value as char);
     while !queue.is_empty() {
         let len = queue.len();
         for _ in 0..len {
             if let Some((r, c)) = queue.pop_front() {
+                if matrix[r][c] == b'.' {
+                    continue;
+                }
                 matrix[r][c] = b'.';
                 let inserted = cells.insert((r, c));
                 if inserted {
@@ -78,9 +81,10 @@ fn bfs(matrix: &mut [Vec<u8>], n: usize, (row, col): (usize, usize)) -> usize {
                 }
             }
         }
+        // println!("{}, ", queue.len());
     }
     let area = cells.len();
-    println!("\n\tarea: {area}\n\tperimeter: {perimeter}");
+    // println!("\n\tarea: {area}\n\tperimeter: {perimeter}");
     area * perimeter
 }
 
