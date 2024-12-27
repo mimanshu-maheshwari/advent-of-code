@@ -89,6 +89,18 @@ impl Game {
         }
     }
 
+    //   a_x * i + b_x * j = p_x
+    //   a_y * i + b_y * j = p_y
+    //   a_x * b_y * i + b_x * b_y * j = p_x * b_y
+    // - a_y * b_x * i + b_y * b_x * j = p_y * b_x
+    //   a_x * b_y * i - a_y * b_x * i = p_x * b_y - p_y * b_x
+    //
+    //   i = (p_x * b_y - p_y * b_x) / (a_x * b_y - a_y * b_x)
+    //
+    //   a_x * b_y != a_y * b_x meaning lines (a_x/b_x, a_y/b_y) are parallel
+    //
+    //   j = (p_x - (a_x * j)) / b_x;
+    //
     // find minimum tokens required to reach the prize using game button a and b
     // 3 tokens to push A
     // 1 token to push B
