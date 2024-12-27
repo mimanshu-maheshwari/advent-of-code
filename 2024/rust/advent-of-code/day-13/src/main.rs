@@ -1,6 +1,6 @@
 use core::panic;
 
-use day::{part1::solve as solve1, part2::solve as solve2, solver::solve, Result};
+use day_13::{part1::solve as solve1, part2::solve as solve2, solver::solve, Result};
 
 const INPUT: &str = "res/input.txt";
 
